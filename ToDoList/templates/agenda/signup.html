@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+    <form method="post" action="{% url 'agenda:signup' %}">
+        {% csrf_token %}
+        {{form.as_div}}
+        <button type="submit"> 생성하기</button>
+    </form>
+</div>
+{% endblock %}
