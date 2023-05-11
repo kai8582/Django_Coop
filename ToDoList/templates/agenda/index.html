@@ -5,12 +5,8 @@
     <h2> Please login to view your to-do list</h2>
 </div>
 <div>
-<form method="post" action="{% url 'agenda:index' %}">
-
-    {% csrf_token %}
-    {{form}}
-
-<button type="submit">로그인</button>
+    <form method == "GET" action = "{% url 'agenda:login' %}">
+    <input type ="submit" Value = '로그인'>
 </form>
 <p>Don't have an account? Click</p><a href="{% url 'agenda:signup' %}">here</a><p>to signup!</p>
 </div>
