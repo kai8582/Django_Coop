@@ -1,9 +1,17 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from .forms import UserForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+def index(request):
+    return render(request, 'agenda/index.html')
+
+
+
 def signup(request):
     if request.method=="POST":
         form = UserForm(request.POST)
@@ -19,9 +27,32 @@ def signup(request):
 
 
 def login(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username = username, password = password)
+        if user is not None:
+            auth_login(request, user)
+            return redirect('agenda:detail')
+        else:
+            return redirect('agenda:login')
+           
+        
+    else:
+        return render(request, 'agenda/login.html')
+    
+def logout(request):
+    auth_logout(request)
+    return redirect("agenda:index")
+
+
+
+@login_required(login_url = 'agenda:index')
+def details(request):
     # 여기가 아마 진용님이 작업하실 뷰 인것같습니다. 여기서 초기화면 구현 로직 짜시면 됩니다! 저엿다면 objects.get(유저정보)로 데이터목록들을 불러올거같습니다!
     # url pattern과 function 이름도 제가 마음대로 햇으니 마음대로 수정하셔도 됩니다! 진용님파트가 제일 중요할거같네요ㅎㅎ HTML도 새로 만들어야될거같습니다. 추가로 settings.py파일에 login_redirect_url도 수정이 필요할거같습니다
-    return HttpResponse("Login Successful!!")
+    user = request.user
+    return render (request, 'agenda/details.html', {'user': user})
 
 
 def update(request):
