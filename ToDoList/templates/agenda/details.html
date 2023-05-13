@@ -2,6 +2,10 @@
 {% block content %}
 <h1> Hello {{user.username}}</h1>
 <a href = "{% url 'agenda:logout' %}">로그아웃</a>
+<ul>
+{% for item in data.all%}
+    <li>{{item.content}}</li>
+{%endfor%}
 
 
 

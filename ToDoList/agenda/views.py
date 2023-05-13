@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
+from .models import ToDos
 
 # Create your views here.
 def index(request):
@@ -49,10 +50,9 @@ def logout(request):
 
 @login_required(login_url = 'agenda:index')
 def details(request):
-    # 여기가 아마 진용님이 작업하실 뷰 인것같습니다. 여기서 초기화면 구현 로직 짜시면 됩니다! 저엿다면 objects.get(유저정보)로 데이터목록들을 불러올거같습니다!
-    # url pattern과 function 이름도 제가 마음대로 햇으니 마음대로 수정하셔도 됩니다! 진용님파트가 제일 중요할거같네요ㅎㅎ HTML도 새로 만들어야될거같습니다. 추가로 settings.py파일에 login_redirect_url도 수정이 필요할거같습니다
-    user = request.user
-    return render (request, 'agenda/details.html', {'user': user})
+    user_datas = ToDos.objects.filter(author = request.user)
+    
+    return render (request, 'agenda/details.html', {'data':user_datas})
 
 
 def update(request):
