@@ -48,10 +48,10 @@ def logout(request):
 
 
 
-@login_required(login_url = 'agenda:index')
+@login_required(login_url = 'agenda:login')
 def details(request):
     user_datas = ToDos.objects.filter(author = request.user)
-    
+
     return render (request, 'agenda/details.html', {'data':user_datas})
 
 
