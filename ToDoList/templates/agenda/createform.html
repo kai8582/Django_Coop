@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <h2>todolist 추가</h2>
-<form action="" method = "POST">
+<form method = "POST">
     {% csrf_token %}
     <br>
     + <textarea name="content" cols="15" rows="15"></textarea>
