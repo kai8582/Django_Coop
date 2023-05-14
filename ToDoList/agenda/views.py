@@ -1,11 +1,12 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.http import HttpResponse
-from .forms import UserForm
+from .forms import UserForm, ToDoForm
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from .models import ToDos
+from django.utils import timezone
 
 # Create your views here.
 def index(request):
@@ -55,14 +56,49 @@ def details(request):
     return render (request, 'agenda/details.html', {'data':user_datas})
 
 
-def update(request):
-    #학선님 업데이트 뷰 입니다! 제 생각에는 업데이트 버튼 클릭 시 pk 를 이용한 데이터조회후에 create form 으로 간 다음 request.method == "POST" 로 데이터 수정 가능할것같습니다!
-    return
 
-def delete(request):
-    #선우님 삭제 뷰 입니다! 업데이트와 비슷하게 클릭 시 pk를 이용한 데이터 조회후에 삭제. 따로 render html파일은 안만들어도 될거 같습니다! redirect로!
-    return
+@login_required(login_url = "agenda:login")
+def update(request,item_id):
+    data = get_object_or_404(ToDos,pk = item_id)
+    if request.method == "POST":
+        form = ToDoForm(request.POST, instance = data)
+        if form.is_valid():
+            data = form.save(commit = False)
+            data.pub_date = timezone.now()
+            data.save()
+            return redirect("agenda:detail")
+        else:
+            form = ToDoForm(instance=data)
+            return render(request, 'agenda/createform.html',{'form':form})
 
+
+    else:
+        form = ToDoForm(instance=data)
+        context = {'form':form}
+        return render(request, 'agenda/createform.html',context)
+
+
+@login_required(login_url = "agenda:login")
+def delete(request, item_id):
+    data = get_object_or_404(ToDos, pk = item_id)
+    data.delete()
+    return redirect("agenda:detail")
+
+
+
+@login_required(login_url = 'agenda:login')
 def create(request):
-    #은혜님 뷰! 제 생각에 createform.html 파일을 만들어야할거같습니다. 또 forms.py파일에 새로운 클래스와 데이터베이스 연동이 필요할듯합니다! 
-    return
+    if request.method == "POST":
+        form = ToDoForm(request.POST)
+        if form.is_valid():
+            content = form.save(commit = False)
+            content.pub_date = timezone.now()
+            content.author = request.user
+            content.save()
+            return redirect('agenda:detail')
+        else:
+            return redirect('agenda:create')
+    
+    else:
+        form = ToDoForm()
+        return render(request, 'agenda/createform.html', {'form':form})
