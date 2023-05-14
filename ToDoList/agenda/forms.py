@@ -9,7 +9,7 @@ class UserForm(UserCreationForm):
         model = User
         fields=('username','password1','password2','email')
         
-class CreateForm():
+class CreateForm(forms.ModelForm):
     class Meta:
         model = ToDos
         fields=('content', 'pub_date', 'author')

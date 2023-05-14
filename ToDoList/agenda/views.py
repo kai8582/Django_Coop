@@ -76,5 +76,6 @@ def create(request):
             todo_create.save()
         return redirect('agenda:index')
     else:
-        return render(request, 'agenda/createform.html')
+        form = CreateForm()
+    return render(request, 'agenda/createform.html')
     #은혜님 뷰! 제 생각에 createform.html 파일을 만들어야할거같습니다. 또 forms.py파일에 새로운 클래스와 데이터베이스 연동이 필요할듯합니다! 
