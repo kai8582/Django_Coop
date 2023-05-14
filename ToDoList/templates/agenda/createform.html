@@ -2,7 +2,7 @@
 {% block content %}
 <form method = "POST">
     {% csrf_token %}
-    What do you have to do?
+    What do you want to do?
     <br>
     <textarea name = "content" rows = "5">{{form.content.value |default_if_none:""}} </textarea>
     <br>
