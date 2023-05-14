@@ -2,9 +2,10 @@
 {% block content %}
 <h1> Hello {{user.username}}</h1>
 <a href = "{% url 'agenda:logout' %}">로그아웃</a>
+<a href="/create/">todolist 추가</a>
 
 {% for todos in agenda %}
-<h2>todolist:{{todos.content}}</h2>
+<h2>todolist:{{form.as_p}}</h2>
 {% endfor %}
 
 
