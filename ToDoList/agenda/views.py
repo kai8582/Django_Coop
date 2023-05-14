@@ -6,6 +6,8 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 
+from .models import ToDos
+
 # Create your views here.
 def index(request):
     return render(request, 'agenda/index.html')
@@ -64,5 +66,11 @@ def delete(request):
     return
 
 def create(request):
+    if request.method == "POST":  
+        content = request.POST.get('content')
+        todos = ToDos(content=content)
+        todos.save()
+        return redirect('agenda:index')
+    else:
+        return render(request, 'agenda/createform.html')
     #은혜님 뷰! 제 생각에 createform.html 파일을 만들어야할거같습니다. 또 forms.py파일에 새로운 클래스와 데이터베이스 연동이 필요할듯합니다! 
-    return

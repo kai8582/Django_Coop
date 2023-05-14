@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>todolist 추가</h2>
+<form action="/agenda/create/" method = "POST">
+    <br>
+    + <textarea name="content" cols="15" rows="15"></textarea>
+    <br>
+    <input type="submit" value="Send">
+</form>
+{% endblock %}

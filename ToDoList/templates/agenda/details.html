@@ -3,6 +3,9 @@
 <h1> Hello {{user.username}}</h1>
 <a href = "{% url 'agenda:logout' %}">로그아웃</a>
 
+{% for todos in agenda %}
+<h2>todolist:{{todos.content}}</h2>
+{% endfor %}
 
 
 {% endblock %}
