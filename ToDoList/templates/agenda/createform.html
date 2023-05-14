@@ -4,7 +4,7 @@
 <form method = "POST">
     {% csrf_token %}
     <br>
-    + <textarea name="content" cols="15" rows="15"></textarea>
+    <textarea name="content" cols="15" rows="15">{{ form.as_p }}</textarea>
     <br>
     <input type="submit" value="Send">
 </form>

@@ -6,13 +6,13 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 
+from django.utils import timezone
+from .forms import CreateForm
 from .models import ToDos
 
 # Create your views here.
 def index(request):
     return render(request, 'agenda/index.html')
-
-
 
 def signup(request):
     if request.method=="POST":
@@ -67,9 +67,13 @@ def delete(request):
 
 def create(request):
     if request.method == "POST":  
-        content = request.POST.get('content')
-        todos = ToDos(content=content)
-        todos.save()
+        form = CreateForm(request.POST)
+        if form.is_valid():
+            todo_create = form.save(commit=False)
+            todo_create.content = request.POST.get('content')
+            todo_create.pub_data = timezone.now()
+            todo_create.author = request.user
+            todo_create.save()
         return redirect('agenda:index')
     else:
         return render(request, 'agenda/createform.html')
