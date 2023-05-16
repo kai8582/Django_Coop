@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseRedirect
 from .forms import UserForm
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
