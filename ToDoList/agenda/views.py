@@ -5,7 +5,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
-
+from django.shortcuts import get_object_or_404
+from .models import ToDos
 # Create your views here.
 def index(request):
     return render(request, 'agenda/index.html')
@@ -61,7 +62,9 @@ def update(request):
 
 def delete(request):
     #선우님 삭제 뷰 입니다! 업데이트와 비슷하게 클릭 시 pk를 이용한 데이터 조회후에 삭제. 따로 render html파일은 안만들어도 될거 같습니다! redirect로!
-    return
+    data=get_object_or_404(ToDos,pk=id)
+    data.delete()
+    return redirect('agenda/details.html')
 
 def create(request):
     #은혜님 뷰! 제 생각에 createform.html 파일을 만들어야할거같습니다. 또 forms.py파일에 새로운 클래스와 데이터베이스 연동이 필요할듯합니다! 
