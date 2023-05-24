@@ -1,8 +1,24 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<h1> Hello {{user.username}}</h1>
-<a href = "{% url 'agenda:logout' %}">로그아웃</a>
+    <h1>Hello {{ user.username }}</h1>
+    <a href="{% url 'agenda:logout' %}">로그아웃</a>
 
+    <h2>새로운 할 일 추가</h2>
+    <form method="post" action="{% url 'agenda:detail' %}">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="할 일 제목">
+        <button type="submit">추가</button>
+    </form>
+    
+    <h2>투두 리스트</h2>
+    <ul>
+        {% for todo in todos %}
+            <li>{{ todo.content }}</li>
+        {% empty %}
+            <li>투두가 없습니다.</li>
+        {% endfor %}
+    </ul>
 
-
+    
 {% endblock %}
