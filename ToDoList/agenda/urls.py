@@ -11,5 +11,4 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('logout/',views.logout, name = "logout"),
     path('detail/',views.details, name = 'detail'),
-    path('update/<int:id>/',views.update,name="update"),
 ]
