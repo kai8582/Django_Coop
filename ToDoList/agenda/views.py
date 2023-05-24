@@ -1,10 +1,13 @@
-from django.shortcuts import render,redirect
+from datetime import timezone
+from django.shortcuts import render,redirect, get_object_or_404
 from django.http import HttpResponse
-from .forms import UserForm
+from .forms import UserForm, ToDoForm
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
+from .models import ToDos
+
 
 # Create your views here.
 def index(request):
@@ -54,8 +57,22 @@ def details(request):
     user = request.user
     return render (request, 'agenda/details.html', {'user': user})
 
-
-def update(request):
+@login_required(login_url='agenda:index')
+def update(request,id):
+    data=get_object_or_404(ToDos,pk=id)
+    if request.method=="POST":
+        form=ToDoForm(request.POST, instance=data)
+        if form.is_valid():
+            data=form.save(commit=False)
+            data.pub_date=timezone.now()
+            data.save()
+        else:
+            form=ToDoForm(instance=data)
+            return render(request, '생성페이지',{'form':form})
+    else:
+        form=ToDoForm(instance=data)
+        context={'form':form}
+        return render(request,'생성페이지',context)
     #학선님 업데이트 뷰 입니다! 제 생각에는 업데이트 버튼 클릭 시 pk 를 이용한 데이터조회후에 create form 으로 간 다음 request.method == "POST" 로 데이터 수정 가능할것같습니다!
     return
 
