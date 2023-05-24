@@ -55,9 +55,26 @@ def details(request):
     return render (request, 'agenda/details.html', {'user': user})
 
 
-def update(request):
-    #학선님 업데이트 뷰 입니다! 제 생각에는 업데이트 버튼 클릭 시 pk 를 이용한 데이터조회후에 create form 으로 간 다음 request.method == "POST" 로 데이터 수정 가능할것같습니다!
-    return
+#학선님 업데이트 뷰 입니다!
+#제 생각에는 업데이트 버튼 클릭 시 pk 를 이용한 데이터조회후에 create form 으로 간 다음 request.method == "POST" 로 데이터 수정 가능할것같습니다!
+@login_required(login_url='agenda:index')
+def update(request,id):
+    data=get_object_or_404(ToDos,pk=id)
+    if request.method=="POST":
+        form=ToDoForm(request.POST, instance=data)
+        if form.is_valid():
+            data=form.save(commit=False)
+            data.pub_date=timezone.now()
+            data.save()
+        else:
+            form=ToDoForm(instance=data)
+            return render(request, '생성페이지',{'form':form})
+    else:
+        form=ToDoForm(instance=data)
+        context={'form':form}
+        return render(request,'생성페이지',context)
+
+
 
 def delete(request):
     #선우님 삭제 뷰 입니다! 업데이트와 비슷하게 클릭 시 pk를 이용한 데이터 조회후에 삭제. 따로 render html파일은 안만들어도 될거 같습니다! redirect로!
